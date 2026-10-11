@@ -1,0 +1,240 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+/*
+ * Design tokens. Components use the semantic names (surface, ink, line ...);
+ * the two themes only redefine the variables.
+ */
+:root {
+  color-scheme: light;
+
+  --page: #eef2f1;
+  --surface: #fbfcfc;
+  --surface-2: #f2f5f4;
+  --surface-3: #e6ecea;
+  --ink: #14201e;
+  --ink-2: #43504d;
+  --ink-3: #65716e;
+  --line: #d9e0de;
+  --line-strong: #bac6c2;
+
+  --accent: #1f5c4d;
+  --accent-hover: #17483c;
+  --accent-ink: #ffffff;
+  --accent-soft: #dfece8;
+  --accent-text: #1a5445;
+  --focus: #2a78d6;
+
+  --sidebar: #12302b;
+  --sidebar-raised: #1c443c;
+  --sidebar-ink: #e6f0ed;
+  --sidebar-muted: #a3bab3;
+  --sidebar-line: #25504748;
+  --sidebar-contour: #2c5b51;
+
+  /* Status: reserved for good/bad meaning, always paired with an icon or label. */
+  --good: #0ca30c;
+  --warning: #fab219;
+  --serious: #ec835a;
+  --critical: #d03b3b;
+  --good-text: #006300;
+  --bad-text: #b3261e;
+  --warning-text: #7a5200;
+  --good-soft: #e2f3e2;
+  --bad-soft: #fbe9e7;
+  --warning-soft: #fdf1d3;
+
+  /* Chart series, in fixed order. Validated against --surface for both themes. */
+  --series-1: #2a78d6;
+  --series-2: #eb6834;
+  --series-3: #1baf7a;
+  --series-4: #eda100;
+  --series-5: #e87ba4;
+  --series-6: #008300;
+  --series-muted: #a7b3af;
+  --series-1-soft: #2a78d61a;
+  --chart-grid: #e3e9e7;
+  --chart-axis: #c2cdc9;
+}
+
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  --page: #0d1413;
+  --surface: #151d1c;
+  --surface-2: #1b2524;
+  --surface-3: #24302e;
+  --ink: #e8efed;
+  --ink-2: #b6c3bf;
+  --ink-3: #8d9b97;
+  --line: #27332f;
+  --line-strong: #3a4945;
+
+  --accent: #2f7d6d;
+  --accent-hover: #3a917f;
+  --accent-ink: #ffffff;
+  --accent-soft: #1b3832;
+  --accent-text: #8fd3bf;
+  --focus: #6aa5ee;
+
+  --sidebar: #0a100f;
+  --sidebar-raised: #172b27;
+  --sidebar-ink: #e3eeeb;
+  --sidebar-muted: #8ea39d;
+  --sidebar-line: #1d2b2848;
+  --sidebar-contour: #18302b;
+
+  --good-text: #3fc13f;
+  --bad-text: #f28b82;
+  --warning-text: #f2c14e;
+  --good-soft: #12301a;
+  --bad-soft: #3a1c1a;
+  --warning-soft: #3a2e10;
+
+  --series-1: #3987e5;
+  --series-2: #d95926;
+  --series-3: #199e70;
+  --series-4: #c98500;
+  --series-5: #d55181;
+  --series-6: #008300;
+  --series-muted: #56635f;
+  --series-1-soft: #3987e526;
+  --chart-grid: #222d2b;
+  --chart-axis: #34423f;
+}
+
+@theme inline {
+  --font-sans: var(--font-instrument), system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  --color-page: var(--page);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-surface-3: var(--surface-3);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-ink-3: var(--ink-3);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-ink: var(--accent-ink);
+  --color-accent-soft: var(--accent-soft);
+  --color-accent-text: var(--accent-text);
+  --color-focus: var(--focus);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-raised: var(--sidebar-raised);
+  --color-sidebar-ink: var(--sidebar-ink);
+  --color-sidebar-muted: var(--sidebar-muted);
+  --color-good: var(--good);
+  --color-warning: var(--warning);
+  --color-serious: var(--serious);
+  --color-critical: var(--critical);
+  --color-good-text: var(--good-text);
+  --color-bad-text: var(--bad-text);
+  --color-warning-text: var(--warning-text);
+  --color-good-soft: var(--good-soft);
+  --color-bad-soft: var(--bad-soft);
+  --color-warning-soft: var(--warning-soft);
+  --color-series-1: var(--series-1);
+  --color-series-muted: var(--series-muted);
+
+  /* Type scale for a dense tool: 12 / 13 / 14 / 16 / 20 / 28. */
+  --text-2xs: 0.6875rem;
+  --text-xs: 0.75rem;
+  --text-sm: 0.8125rem;
+  --text-base: 0.875rem;
+  --text-lg: 1rem;
+  --text-xl: 1.25rem;
+  --text-2xl: 1.75rem;
+
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+}
+
+@layer base {
+  html {
+    font-size: 16px;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background: var(--page);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    font-size: var(--text-base);
+    line-height: 1.45;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+  }
+
+  ::selection {
+    background: var(--accent-soft);
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-weight: 600;
+  }
+
+  button,
+  [role="button"] {
+    cursor: pointer;
+  }
+
+  button:disabled {
+    cursor: not-allowed;
+  }
+
+  input[type="date"]::-webkit-calendar-picker-indicator {
+    opacity: 0.6;
+  }
+}
+
+@layer utilities {
+  /* Columns of figures align; headline figures keep proportional digits. */
+  .num {
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* The narrow width of the typeface, for headings and column labels. */
+  .narrow {
+    font-stretch: 84%;
+    letter-spacing: 0.005em;
+  }
+
+  /* For every scroll container. `position: relative` keeps visually hidden
+     (absolutely positioned) text inside the scroll area, so it cannot widen the page. */
+  .scroll-thin {
+    position: relative;
+    scrollbar-width: thin;
+    scrollbar-color: var(--line-strong) transparent;
+  }
+}
+
+/* Content dims while a filter change is loading instead of flashing a skeleton. */
+[data-pending="true"] {
+  opacity: 0.55;
+  transition: opacity 120ms ease-out 80ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Recharts draws a focus rectangle around the whole SVG on click; the wrapper handles focus. */
+.recharts-wrapper:focus,
+.recharts-surface:focus {
+  outline: none;
+}
