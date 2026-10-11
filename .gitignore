@@ -1,0 +1,36 @@
+# Local configuration and secrets. Only .env.example is committed.
+.env
+.env.*
+!.env.example
+
+# Node / Next.js
+node_modules/
+.next/
+out/
+next-env.d.ts
+*.tsbuildinfo
+playwright-report/
+test-results/
+npm-debug.log*
+
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+dist/
+build/
+
+# Pipeline output and inputs that stay on the machine
+pipelines/reports/
+pipelines/exports/
+
+# Editors and operating systems
+.DS_Store
+.idea/
+.vscode/
+*.swp

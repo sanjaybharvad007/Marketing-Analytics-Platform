@@ -1,0 +1,14 @@
+# Applies to images built from the repository root (pipelines/Dockerfile).
+.git
+.env
+.env.*
+!.env.example
+web
+docs
+**/.venv
+**/__pycache__
+**/.pytest_cache
+**/.ruff_cache
+pipelines/tests
+pipelines/reports
+pipelines/exports

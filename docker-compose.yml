@@ -1,0 +1,109 @@
+# Local stack.
+#
+#   docker compose up -d --wait postgres      PostgreSQL only (the quickstart path)
+#   docker compose up --build                  PostgreSQL, demo data and the web app
+#   docker compose --profile tools run --rm pipelines run all --mode demo
+#
+# The credentials below are for local development only.
+
+name: marketing-analytics
+
+x-database-url: &database-url postgres://postgres:postgres@postgres:5432/marketing
+
+x-pipelines: &pipelines
+  build:
+    context: .
+    dockerfile: pipelines/Dockerfile
+  image: marketing-analytics-pipelines
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: marketing
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d marketing"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+      start_period: 5s
+
+  # Runs once: applies the migrations and loads the demo dataset, then exits.
+  # Safe to run again; existing workspace rows are left alone.
+  seed:
+    <<: *pipelines
+    command: ["seed-demo"]
+    environment:
+      DATABASE_URL: *database-url
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: "no"
+
+  web:
+    build:
+      context: ./web
+    image: marketing-analytics-web
+    environment:
+      DATABASE_URL: *database-url
+      API_TOKEN: ${API_TOKEN:-dev-token-change-me}
+      API_REQUIRE_TOKEN_FOR_READS: ${API_REQUIRE_TOKEN_FOR_READS:-false}
+      BRAND_NAME: ${BRAND_NAME:-Northpeak Outfitters}
+      SITE_URL: ${SITE_URL:-https://www.northpeak.example}
+    ports:
+      - "3000:3000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      seed:
+        condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:3000/api/v1/health >/dev/null || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+
+  # The demo site that `map audit` crawls.
+  demo-site:
+    <<: *pipelines
+    profiles: ["tools"]
+    command: ["serve-demo-site", "--host", "0.0.0.0", "--port", "8200"]
+    ports:
+      - "8200:8200"
+
+  # The CLI, for one-off runs:
+  #   docker compose --profile tools run --rm pipelines status
+  #   docker compose --profile tools up -d demo-site
+  #   docker compose --profile tools run --rm pipelines audit --url http://demo-site:8200/
+  #   docker compose --profile tools run --rm pipelines digest > digest.md
+  pipelines:
+    <<: *pipelines
+    profiles: ["tools"]
+    environment:
+      DATABASE_URL: *database-url
+      API_BASE_URL: http://web:3000
+      API_TOKEN: ${API_TOKEN:-dev-token-change-me}
+      SITE_URL: ${SITE_URL:-https://www.northpeak.example}
+      BRAND_NAME: ${BRAND_NAME:-Northpeak Outfitters}
+      LLM_PROVIDER: ${LLM_PROVIDER:-offline}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      ANTHROPIC_MODEL: ${ANTHROPIC_MODEL:-claude-sonnet-5-5}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      OPENAI_MODEL: ${OPENAI_MODEL:-}
+      OPENAI_BASE_URL: ${OPENAI_BASE_URL:-https://api.openai.com/v1}
+    volumes:
+      # SEO-tool exports for `run seo --mode live`. Create the directory first.
+      - ./pipelines/exports:/app/pipelines/exports:ro
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+volumes:
+  pgdata:
