@@ -1,0 +1,5 @@
+date,domain,authority_score,referring_domains,backlinks
+2026-05-30,www.northpeak.example,54,3100,41900
+2026-05-30,summitandco.example,63,7450,118900
+2026-04-01,alpenway.example,41,1450,14800
+bad-date,trailforge.example,49,2600,30500
