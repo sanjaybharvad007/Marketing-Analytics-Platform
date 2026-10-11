@@ -1,0 +1,9 @@
+{
+  "redirects": {
+    "/winter-sale/": "/sale-2025/",
+    "/sale-2025/": "/sale/"
+  },
+  "delays": {
+    "/products/basecamp-4p-tent/": 1.2
+  }
+}

@@ -1,0 +1,15 @@
+/* Minimal styling for the Northpeak demo site. */
+:root { color-scheme: light; --ink: #1c2a27; --muted: #5a6865; --line: #d7dedb; --accent: #1f5c4d; }
+* { box-sizing: border-box; }
+body { margin: 0; font: 16px/1.6 system-ui, -apple-system, "Segoe UI", sans-serif; color: var(--ink); background: #f7f9f8; }
+header, footer { display: flex; flex-wrap: wrap; gap: 1rem 1.5rem; align-items: center; padding: 1rem clamp(1rem, 4vw, 3rem); background: #fff; border-bottom: 1px solid var(--line); }
+footer { border-top: 1px solid var(--line); border-bottom: 0; color: var(--muted); font-size: 0.9rem; }
+nav ul, footer ul { display: flex; flex-wrap: wrap; gap: 0.25rem 1.25rem; margin: 0; padding: 0; list-style: none; }
+a { color: var(--accent); }
+.brand { font-weight: 700; text-decoration: none; color: var(--ink); }
+.cart { margin-left: auto; }
+main { max-width: 44rem; margin: 0 auto; padding: 2rem 1rem 4rem; }
+h1 { font-size: 2rem; line-height: 1.2; margin: 0 0 1rem; }
+h2 { font-size: 1.25rem; margin: 2rem 0 0.5rem; }
+.lede { font-size: 1.15rem; color: var(--muted); }
+img { display: block; max-width: 100%; height: auto; margin: 1.5rem 0; border-radius: 6px; background: #e6ecea; }

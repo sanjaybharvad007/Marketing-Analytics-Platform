@@ -1,0 +1,4 @@
+User-agent: *
+Disallow: /cart/
+
+Sitemap: https://www.northpeak.example/sitemap.xml
